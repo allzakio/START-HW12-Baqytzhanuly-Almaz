@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class ViewController: UIViewController {
     
@@ -65,5 +66,54 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupUI()
+        setupConstraints()
+    }
+    
+    
+    // MARK: - Setups
+    
+    private func setupUI() {
+        view.backgroundColor = .white
+        
+        view.addSubview(circleView)
+        circleView.addSubview(progressBarView)
+        progressBarView.layer.addSublayer(progressLayer)
+        circleView.addSubview(timerLabel)
+        circleView.addSubview(startButton)
+        
+        let circlePath = UIBezierPath(arcCenter: CGPoint(x: circleRadius / 2, y: circleRadius / 2),
+                                      radius: circleRadius / 2,
+                                      startAngle: -CGFloat.pi / 2,
+                                      endAngle: 3 * CGFloat.pi / 2, clockwise: true)
+        progressLayer.path = circlePath.cgPath
+        progressLayer.lineWidth = 4
+        progressLayer.fillColor = UIColor.clear.cgColor
+        progressLayer.strokeEnd = 1
+        progressLayer.lineCap = CAShapeLayerLineCap.round
+    }
+    
+    private func setupConstraints() {
+        circleView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.height.equalTo(circleRadius)
+        }
+        
+        progressBarView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.height.equalTo(circleRadius)
+        }
+        
+        timerLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalTo(progressBarView.snp.centerY).offset(-40)
+        }
+        
+        startButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(progressBarView.snp.bottom).offset(-50)
+            make.width.height.equalTo(40)
+        }
     }
 }
