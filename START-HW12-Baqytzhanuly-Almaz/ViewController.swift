@@ -65,6 +65,7 @@ class ViewController: UIViewController {
         button.setImage(UIImage(named: "red_play_icon"), for: .normal)
         button.contentVerticalAlignment = .fill
         button.contentHorizontalAlignment = .fill
+        button.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
 
         return button
     }()
@@ -159,6 +160,7 @@ class ViewController: UIViewController {
     
     @objc private func updateTimer() {
         currentTimeForLabel = timeRemaining
+        updateProgressBar()
         timeRemaining -= 1
         updateTimerLabel()
         updateUI()
@@ -183,5 +185,17 @@ class ViewController: UIViewController {
             progressLayer.strokeColor = greenColor.cgColor
             timerLabel.textColor = greenColor
         }
+    }
+    
+    // MARK: - Animations
+    
+    private func updateProgressBar() {
+        let progress = CGFloat(currentTimeForLabel / totalDuration)
+        let center = CGPoint(x: progressBarView.bounds.midX, y: progressBarView.bounds.midY)
+        let radius =  progressBarView.bounds.width / 2
+        let startAngle = -CGFloat.pi / 2
+        let endAngle = startAngle + 2 * CGFloat.pi * progress
+        let circlePath = UIBezierPath(arcCenter: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
+        progressLayer.path = circlePath.cgPath
     }
 }
